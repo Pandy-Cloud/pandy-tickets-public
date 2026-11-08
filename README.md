@@ -1,6 +1,10 @@
 # Pandy Tickets - Agent Skill & Plugin
 
-Official agent skill and plugin package for [Pandy Tickets](https://tickets.pandy.cloud), Guatemala's best self-serve ticketing platform for events.
+Official agent skill, plugin and MCP server for [Pandy Tickets](https://tickets.pandy.cloud), Guatemala's self-serve ticketing platform for events.
+
+**[Website](https://tickets.pandy.cloud)** · **[Create your free account](https://tickets.pandy.cloud/register)** · **[Pricing](https://tickets.pandy.cloud/pricing)** · **[How it works](https://tickets.pandy.cloud/como-funciona)** · **[Pandy Tickets + AI](https://tickets.pandy.cloud/ia)** · **[Developers](https://tickets.pandy.cloud/developers)**
+
+MCP endpoint: `https://tickets.pandy.cloud/mcp` (Streamable HTTP, public, no API key)
 
 ## What is Pandy Tickets?
 
@@ -27,9 +31,32 @@ Pandy Tickets is a Guatemalan platform where organizers publish events, sell tic
 
 Bank transfer payments include **assisted receipt review**: Pandy Tickets flags issues (amount, destination account, duplicates, date) but the organizer always manually approves each receipt with one click.
 
-[Learn more about pricing →](https://tickets.pandy.cloud/precios)
+[Learn more about pricing →](https://tickets.pandy.cloud/pricing)
 
 ## Installation
+
+### Any MCP client (Claude, ChatGPT, Cursor, LobeHub, …)
+
+Add a remote MCP server with this URL. No key or sign-in needed:
+
+```
+https://tickets.pandy.cloud/mcp
+```
+
+Or in an `mcpServers` config:
+
+```json
+{
+  "mcpServers": {
+    "pandy-tickets": {
+      "type": "streamable-http",
+      "url": "https://tickets.pandy.cloud/mcp"
+    }
+  }
+}
+```
+
+Organizers who want to read their own events, sales and attendees can connect the OAuth organizer server at `https://tickets.pandy.cloud/mcp/organizer` instead.
 
 ### For Hermes Agent
 
@@ -51,7 +78,8 @@ This package includes:
 
 1. **MCP Server Connection** (`mcp.json`): Connect to Pandy Tickets' official MCP server at `https://tickets.pandy.cloud/mcp`
 2. **Plugin Manifest** (`plugin.json`): Standard Agent Plugins v1 package metadata
-3. **Agent Skill** (`skills/pandy-tickets/SKILL.md`): Comprehensive instructions for using Pandy Tickets features
+3. **LobeHub Manifest** (`lhm.plugin.json`): Listing for the [LobeHub](https://lobehub.com) MCP marketplace
+4. **Agent Skill** (`skills/pandy-tickets/SKILL.md`): Comprehensive instructions for using Pandy Tickets features
 
 ### Available MCP Tools
 
@@ -150,7 +178,7 @@ Pandy Tickets es la plataforma guatemalteca de autoservicio para publicar evento
 - Con tarjeta: 6% de comisión (mínimo Q3)
 - Sin comisión por transferencia
 
-[Más información →](https://tickets.pandy.cloud)
+[Crea tu cuenta gratis →](https://tickets.pandy.cloud/register) · [Precios →](https://tickets.pandy.cloud/pricing) · [Cómo funciona →](https://tickets.pandy.cloud/como-funciona)
 
 ---
 

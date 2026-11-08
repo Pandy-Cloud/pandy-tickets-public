@@ -1,0 +1,197 @@
+{
+  "identifier": "pandy-tickets",
+  "name": "Pandy Tickets",
+  "version": "1.0.0",
+  "description": "Find events in Guatemala, get ticket prices and availability, get checkout links, and draft new events on Pandy Tickets. Public remote MCP server, no API key.",
+  "author": "Pandy Cloud",
+  "authorUrl": "https://tickets.pandy.cloud",
+  "homepage": "https://tickets.pandy.cloud",
+  "icon": "https://tickets.pandy.cloud/apple-touch-icon.png",
+  "cloudEndpoint": "https://tickets.pandy.cloud/mcp",
+  "tags": [
+    "tickets",
+    "events",
+    "ticketing",
+    "guatemala",
+    "event-registration",
+    "qr-check-in",
+    "mcp"
+  ],
+  "prompts": [],
+  "resources": [],
+  "tools": [
+    {
+      "name": "search-events",
+      "description": "Search upcoming published events on Pandy Tickets in Guatemala, soonest first, 20 per page. Each result has its public URL, dates, venue, how people get in (free, transfer or card) and the lowest price.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "q": {
+            "type": "string",
+            "description": "Text in the title, venue or description, e.g. \"congreso\", \"Antigua\", \"5K\"."
+          },
+          "from": {
+            "type": "string",
+            "description": "Starts on or after this date, YYYY-MM-DD, Guatemala time."
+          },
+          "to": {
+            "type": "string",
+            "description": "Starts on or before this date, YYYY-MM-DD, Guatemala time."
+          },
+          "entry": {
+            "type": "string",
+            "description": "Only events that take people this way.",
+            "enum": [
+              "free",
+              "transfer",
+              "card"
+            ]
+          },
+          "page": {
+            "type": "integer",
+            "description": "Page number, starting at 1.",
+            "minimum": 1
+          }
+        }
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "get-event",
+      "description": "One published event: description, ticket types with prices and whether each is sold out, what the registration form asks, and how people get in (entry.url and Spanish entry.instructions to relay).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "description": "The event slug, from search-events or the event URL (/e/{slug})."
+          }
+        },
+        "required": [
+          "slug"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "get-checkout-link",
+      "description": "The link a person opens to buy tickets or register, with Spanish instructions to relay. For paid events (card or bank transfer), checkout opens with the ticket type and quantity already chosen. For free registration, it is the event page. Nothing is reserved or charged: the person completes it themselves.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "slug": {
+            "type": "string",
+            "description": "The event slug."
+          },
+          "ticket_type_id": {
+            "type": "integer",
+            "description": "For paid events: the ticket type id from get-event."
+          },
+          "quantity": {
+            "type": "integer",
+            "description": "For paid events: how many tickets, default 1.",
+            "minimum": 1,
+            "maximum": 100
+          }
+        },
+        "required": [
+          "slug"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": true,
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "openWorldHint": false
+      }
+    },
+    {
+      "name": "draft-event",
+      "description": "Prepare a person's own event on Pandy Tickets from what they told you (name, date, place, ticket categories with price and quantity). Nothing is published and no account is created: it returns a one-time claim_url, valid 48 hours. The person opens it, signs in with Google, reviews the event and publishes it with one click. Leave ticket_types empty for a free event.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Event name, up to 160 characters."
+          },
+          "description": {
+            "type": "string",
+            "description": "What the event is about, up to 5000 characters."
+          },
+          "start_at": {
+            "type": "string",
+            "description": "Start, Guatemala local time, YYYY-MM-DDTHH:MM. Must be in the future."
+          },
+          "end_at": {
+            "type": "string",
+            "description": "End, Guatemala local time, YYYY-MM-DDTHH:MM, after start_at."
+          },
+          "venue": {
+            "type": "string",
+            "description": "Place or city, up to 240 characters."
+          },
+          "capacity": {
+            "type": "integer",
+            "description": "Most people the event takes in total, if there is a limit.",
+            "minimum": 1
+          },
+          "ticket_types": {
+            "type": "array",
+            "maxItems": 20,
+            "description": "Paid ticket categories. Empty or omitted for a free event.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Category name, e.g. \"General\", \"Estudiante\"."
+                },
+                "price": {
+                  "type": "string",
+                  "description": "Price in quetzales, e.g. \"150\" or \"75.50\"."
+                },
+                "quantity": {
+                  "type": "integer",
+                  "description": "Tickets of this category.",
+                  "minimum": 1
+                }
+              },
+              "required": [
+                "name",
+                "price",
+                "quantity"
+              ]
+            }
+          },
+          "transfer_instructions": {
+            "type": "string",
+            "description": "Bank, account number and holder for paying by bank transfer."
+          }
+        },
+        "required": [
+          "title",
+          "start_at",
+          "end_at",
+          "venue"
+        ]
+      },
+      "annotations": {
+        "readOnlyHint": false,
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "openWorldHint": false
+      }
+    }
+  ]
+}

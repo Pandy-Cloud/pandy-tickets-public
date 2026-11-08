@@ -1,0 +1,31 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "pandy-tickets",
+  "version": "1.0.0",
+  "description": "Find events in Guatemala, create event drafts, and get checkout links through Pandy Tickets' official MCP server. No authentication required for public features.",
+  "author": {
+    "name": "Pandy Cloud",
+    "url": "https://tickets.pandy.cloud"
+  },
+  "homepage": "https://github.com/Pandy-Cloud/pandy-tickets-public",
+  "repository": "https://github.com/Pandy-Cloud/pandy-tickets-public",
+  "license": "MIT",
+  "keywords": [
+    "pandy",
+    "tickets",
+    "events",
+    "guatemala",
+    "mcp",
+    "ticketing",
+    "qr"
+  ],
+  "extensions": {
+    "com.nousresearch.hermes": {
+      "servers": {
+        "pandy-tickets": {
+          "trust": "trusted"
+        }
+      }
+    }
+  }
+}

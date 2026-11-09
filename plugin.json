@@ -23,7 +23,7 @@
     "com.nousresearch.hermes": {
       "servers": {
         "pandy-tickets": {
-          "trust": "trusted"
+          "trust": "untrusted"
         }
       }
     }
